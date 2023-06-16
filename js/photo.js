@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeBtn = document.querySelector('.close-btn');
   let currentIndex = 0;
   let swipeInProgress = false;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   function showImage(index) {
     const imageSrc = imageLinks[index].querySelector('img').src;
@@ -68,36 +69,38 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   lightbox.addEventListener('touchstart', function (e) {
-    const touchStartX = e.touches[0].clientX;
+    if (isMobile) {
+      const touchStartX = e.touches[0].clientX;
 
-    function handleTouchMove(e) {
-      if (swipeInProgress) return;
+      function handleTouchMove(e) {
+        if (swipeInProgress) return;
 
-      const touchCurrentX = e.touches[0].clientX;
-      const diffX = touchStartX - touchCurrentX;
+        const touchCurrentX = e.touches[0].clientX;
+        const diffX = touchStartX - touchCurrentX;
 
-      if (diffX > 50) {
-        swipeInProgress = true;
-        showNextImage();
-        setTimeout(function () {
-          swipeInProgress = false;
-        }, 500);
-      } else if (diffX < -50) {
-        swipeInProgress = true;
-        showPreviousImage();
-        setTimeout(function () {
-          swipeInProgress = false;
-        }, 500);
+        if (diffX > 50) {
+          swipeInProgress = true;
+          showNextImage();
+          setTimeout(function () {
+            swipeInProgress = false;
+          }, 400);
+        } else if (diffX < -50) {
+          swipeInProgress = true;
+          showPreviousImage();
+          setTimeout(function () {
+            swipeInProgress = false;
+          }, 400);
+        }
       }
-    }
 
-    function handleTouchEnd() {
-      lightbox.removeEventListener('touchmove', handleTouchMove);
-      lightbox.removeEventListener('touchend', handleTouchEnd);
-    }
+      function handleTouchEnd() {
+        lightbox.removeEventListener('touchmove', handleTouchMove);
+        lightbox.removeEventListener('touchend', handleTouchEnd);
+      }
 
-    lightbox.addEventListener('touchmove', handleTouchMove);
-    lightbox.addEventListener('touchend', handleTouchEnd);
+      lightbox.addEventListener('touchmove', handleTouchMove);
+      lightbox.addEventListener('touchend', handleTouchEnd);
+    }
   });
 
   function showNextImage() {
