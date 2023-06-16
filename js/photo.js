@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
     currentIndex = index;
     document.body.classList.add('lightbox-open');
     addNavigationButtons();
+
+    // Center the image
+    lightboxImage.onload = function () {
+      var screenHeight = window.innerHeight;
+      var imageHeight = lightboxImage.offsetHeight;
+      var margin = (screenHeight - imageHeight) / 2;
+      lightboxImage.style.marginTop = margin + 'px';
+    };
   }
 
   function hideImage() {
